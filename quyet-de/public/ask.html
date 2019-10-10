@@ -11,9 +11,10 @@
   <div class='container'>
     <h2>Hãy hỏi cộng đồng một câu hỏi đúng/sai hoặc có/không</h2>
 
-    <form>
-      <textarea rows='6' class='question-input'></textarea>
-      <div>Còn 200/200 kí tự</div>
+    <form class='create-question-form'>
+      <textarea maxLength='200' rows='6' class='question-input'></textarea>
+      <div class='remain-characters'>Còn 200/200 kí tự</div>
+      <div class='error-message'></div>
       <input type='submit' value='Gửi' />
     </form>
   </div>
