@@ -12,6 +12,11 @@ app.use(bodyParser.json());
 // Edit data => PUT/PATCH
 // Delete data => DELETE
 
+app.get('/', (req, res) => {
+	// __dirname: current working directory
+	res.sendFile(path.resolve(__dirname, './public/home.html'));
+});
+
 app.get('/ask', (req, res) => {
 	// __dirname: current working directory
 	res.sendFile(path.resolve(__dirname, './public/ask.html'));
@@ -65,9 +70,92 @@ app.post('/create-question', (req, res) => {
 	});
 });
 
-app.get('/get-question-by-id', (req, res) => {
-	// req.query
-	// get question
+app.get('/get-question-by-id/:questionId', (req, res) => {
+	const questionId = req.params.questionId;
+
+	fs.readFile('data.json', 'utf8', (err, data) => {
+		if (err) {
+			res.status(500).json({
+				success: false,
+				message: err.message,
+			});
+		} else {
+			const questions = JSON.parse(data);
+			let selectedQuestion;
+			for (let i = 0; i < questions.length; i += 1) {
+				if (questions[i].id === Number(questionId)) {
+					selectedQuestion = questions[i];
+					break;
+				}
+			}
+
+			if (!selectedQuestion) {
+				res.status(404).json({
+					success: false,
+					message: 'Question not found',
+				});
+			} else {
+				res.status(200).json({
+					success: true,
+					data: selectedQuestion,
+				});
+			}
+		}
+	});
+});
+
+app.get('/get-random-question', (req, res) => {
+	fs.readFile('data.json', 'utf8', (err, data) => {
+		if (err) {
+			res.status(500).json({
+				success: false,
+				message: err.message,
+			});
+		} else {
+			const questions = JSON.parse(data);
+			const randomQuestion = questions[Math.floor(Math.random() * questions.length)];
+
+			res.status(200).json({
+				success: true,
+				data: randomQuestion,
+			});
+		}
+	});
+});
+
+app.put('/vote', (req, res) => {
+	const questionId = req.body.questionId;
+	const vote = req.body.vote;
+
+	fs.readFile('data.json', 'utf8', (err, data) => {
+		if (err) {
+			res.status(500).json({
+				success: false,
+				message: err.message,
+			});
+		} else {
+			const questions = JSON.parse(data);
+			for (const item of questions) {
+				if (item.id === Number(questionId)) {
+					vote === 'like' ? item.like += 1 : item.dislike += 1;
+					break;
+				}
+			}
+
+			fs.writeFile('data.json', JSON.stringify(questions), (error) => {
+				if (error) {
+					res.status(500).json({
+						success: false,
+						message: err.message,
+					});
+				} else {
+					res.status(200).json({
+						success: true,
+					});
+				}
+			});
+		}
+	});
 });
 
 app.listen(3000, err => {
