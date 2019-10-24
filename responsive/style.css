@@ -1,0 +1,38 @@
+.container {
+  display: flex;
+  width: 70%;
+  margin: 0 auto;
+};
+
+.main {
+  width: 70%;
+}
+
+.sidebar {
+  width: 30%;
+  padding-left: 24px;
+}
+
+@media only screen and (max-width: 768px) {
+  /* CSS code */
+  .container {
+    display: block;
+    width: 90%;
+  }
+
+  .sidebar {
+    width: 90%;
+    display: flex;
+    padding: 0;
+    position: fixed;
+    top: 0px;
+    background-color: blanchedalmond;
+  }
+
+  .sidebar ol {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
