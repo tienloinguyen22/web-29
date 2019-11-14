@@ -1,0 +1,8 @@
+.todo-input {
+  display: flex;
+  margin-top: 24px;
+}
+
+.input {
+  margin-right: 12px;
+}
