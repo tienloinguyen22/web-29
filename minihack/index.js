@@ -14,6 +14,11 @@ mongoose.connect('mongodb://localhost:27017/minihack-web29', (error) => {
     // middlewares
     app.use(express.static('public'));
     app.use(bodyParser.json());
+    app.use((req, res, next) => {
+      res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+      res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+      next();
+    });
 
     // routes
     app.get('/', (req, res) => {
@@ -93,11 +98,11 @@ mongoose.connect('mongodb://localhost:27017/minihack-web29', (error) => {
     });
 
     // listen
-    app.listen(3000, (err) => {
+    app.listen(3001, (err) => {
       if (err) {
         console.log();
       } else {
-        console.log('Server listen on port 3000 ...');
+        console.log('Server listen on port 3001 ...');
       }
     });
   }
