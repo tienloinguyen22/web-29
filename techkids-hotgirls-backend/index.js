@@ -13,6 +13,12 @@ mongoose.connect('mongodb://localhost:27017/techkids-hotgirls', (error) => {
     const server = express();
 
     // middlewares
+    server.use((req, res, next) => {
+      res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+      res.header('Access-Control-Allow-Credentials', 'true');
+      res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+      next();
+    });
     server.use(bodyParser.json());
     server.use(expressSession({
       secret: 'keyboard cat',

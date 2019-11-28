@@ -60,39 +60,46 @@ authRouter.post('/register', async (req, res) => {
     fullName: req.body.fullName,
     password: hashPassword,
   };
-  await UsersModel.create(newUser).lean();
+  await UsersModel.create(newUser);
   res.status(201).json({
     success: true,
   });
 });
 
 authRouter.post('/login', async (req, res) => {
-  // check account
-  const existedEmail = await UsersModel.findOne({email: req.body.email}).lean();
-  if (!existedEmail) {
-    res.status(400).json({
-      success: false,
-      message: 'Email didnt exists',
-    });
-  } else {
-    // compare password
-    const comparePasswordResult = bcryptjs.compareSync(req.body.password, existedEmail.password);
-    if (!comparePasswordResult) {
+  try {
+    // check account
+    const existedEmail = await UsersModel.findOne({email: req.body.email}).lean();
+    if (!existedEmail) {
       res.status(400).json({
         success: false,
-        message: 'Wrong password',
+        message: 'Email didnt exists',
       });
     } else {
-      // session storage
-      req.session.currentUser = {
-        _id: existedEmail._id,
-        email: existedEmail.email,
-      };
+      // compare password
+      const comparePasswordResult = bcryptjs.compareSync(req.body.password, existedEmail.password);
+      if (!comparePasswordResult) {
+        res.status(400).json({
+          success: false,
+          message: 'Wrong password',
+        });
+      } else {
+        // session storage
+        req.session.currentUser = {
+          _id: existedEmail._id,
+          email: existedEmail.email,
+        };
 
-      res.status(200).json({
-        success: true,
-      });
+        res.status(200).json({
+          success: true,
+        });
+      }
     }
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
 });
 
