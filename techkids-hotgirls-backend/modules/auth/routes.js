@@ -6,11 +6,21 @@ const bcryptjs = require('bcryptjs');
 // router
 const authRouter = express.Router();
 
-authRouter.get('/test', (req, res) => {
-  console.log(req.session.currentUser);
-  res.json({
-    success: true,
-  });
+authRouter.get('/get-current-user', (req, res) => {
+  if (req.session.currentUser) {
+    res.status(200).json({
+      success: true,
+      data: {
+        _id: req.session.currentUser._id,
+        email: req.session.currentUser.email,
+      },
+    });
+  } else {
+    res.status(200).json({
+      success: false,
+      message: 'Current user not found',
+    });
+  }
 });
 
 authRouter.post('/register', async (req, res) => {
@@ -101,6 +111,13 @@ authRouter.post('/login', async (req, res) => {
       message: error.message,
     });
   }
+});
+
+authRouter.get('/logout', (req, res) => {
+  req.session.destroy();
+  res.status(200).json({
+    success: true,
+  });
 });
 
 module.exports = authRouter;

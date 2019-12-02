@@ -1,6 +1,56 @@
 import React, { Component } from "react";
 
 class Navbar extends Component {
+  state = {
+    currentUser: undefined,
+  };
+
+  componentWillMount() {
+    fetch('http://localhost:3001/api/auth/get-current-user', {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include',
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        if (data.success) {
+          this.setState({
+            currentUser: data.data,
+          });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  handleLogout = () => {
+    // fetch to /auth/logout
+    fetch('http://localhost:3001/api/auth/logout', {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include',
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        if (data.success) {
+          // clear authUser in state
+          this.setState({
+            currentUser: undefined,
+          });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });;
+  };
+
   render() {
     return (
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -26,16 +76,33 @@ class Navbar extends Component {
                 Home
               </a>
             </li>
-            <li className="nav-item">
-              <a className="nav-link" href="/login">
-                Log In
-              </a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="/register">
-                Register
-              </a>
-            </li>
+            {this.state.currentUser ? (
+              <>
+                <li className="nav-item">
+                  <a className="nav-link">
+                    Welcome, {this.state.currentUser.email}
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link" onClick={this.handleLogout}>
+                    Logout
+                  </a>
+                </li>
+              </>
+            ) : (
+              <>
+                <li className="nav-item">
+                  <a className="nav-link" href="/login">
+                    Log In
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a className="nav-link" href="/register">
+                    Register
+                  </a>
+                </li>
+              </>
+            )}
           </ul>
           <form className="form-inline my-2 my-lg-0">
             <input

@@ -2,6 +2,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const authRouter = require('./modules/auth/routes');
+const postRouter = require('./modules/posts/routes');
+const uploadsRouter = require('./modules/uploads/routes');
 const expressSession = require('express-session');
 
 mongoose.connect('mongodb://localhost:27017/techkids-hotgirls', (error) => {
@@ -20,6 +22,7 @@ mongoose.connect('mongodb://localhost:27017/techkids-hotgirls', (error) => {
       next();
     });
     server.use(bodyParser.json());
+    server.use(bodyParser.urlencoded({ extended: false }));
     server.use(expressSession({
       secret: 'keyboard cat',
       resave: false,
@@ -29,6 +32,8 @@ mongoose.connect('mongodb://localhost:27017/techkids-hotgirls', (error) => {
 
     // routes
     server.use('/api/auth', authRouter);
+    server.use('/api/posts', postRouter);
+    server.use('/api/uploads', uploadsRouter);
 
     // listen
     server.listen(process.env.PORT || 3001, (err) => {
