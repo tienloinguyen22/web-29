@@ -1,0 +1,23 @@
+.preview {
+  width: 400px;
+  height: 450px;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  padding: 5px;
+  border: 1px solid #aeaeb0;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.file-input {
+  margin-top: 12px;
+  width: 400px;
+}
+
+.caption-container {
+  width: 400px;
+  margin-top: 36px;
+}

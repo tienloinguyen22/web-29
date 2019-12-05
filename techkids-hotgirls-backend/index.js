@@ -29,6 +29,7 @@ mongoose.connect('mongodb://localhost:27017/techkids-hotgirls', (error) => {
       saveUninitialized: true,
       cookie: { secure: false }
     }));
+    server.use(express.static('public'));
 
     // routes
     server.use('/api/auth', authRouter);

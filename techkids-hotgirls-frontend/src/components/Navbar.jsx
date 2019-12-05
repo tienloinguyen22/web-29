@@ -51,6 +51,10 @@ class Navbar extends Component {
       });;
   };
 
+  handleCreatePostClick = () => {
+    window.location.href = '/create';
+  };
+
   render() {
     return (
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -115,6 +119,14 @@ class Navbar extends Component {
               Search
             </button>
           </form>
+          {this.state.currentUser ? (
+            <button
+              onClick={this.handleCreatePostClick}
+              className="btn btn-outline-primary my-2 my-sm-0 ml-2"
+            >
+              + New post
+            </button>
+          ) : null}
         </div>
       </nav>
     );

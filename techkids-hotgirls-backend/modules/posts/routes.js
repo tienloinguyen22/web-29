@@ -22,6 +22,30 @@ postRouter.get('/:id', async (req, res) => {
   }
 });
 
+postRouter.get('/', async (req, res) => {
+  try {
+    const pageNumber = Number(req.query.pageNumber);
+    const pageSize = Number(req.query.pageSize);
+
+    const total = await PostModel.find().countDocuments();
+    const data = await PostModel.find()
+      .skip((pageNumber - 1) * pageSize)
+      .limit(pageSize)
+      .lean();
+
+    res.status(200).json({
+      success: true,
+      total: total,
+      data: data,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+});
+
 postRouter.post('/', async (req, res) => {
   // authenticate
   if (!req.session.currentUser) {
