@@ -29,6 +29,7 @@ postRouter.get('/', async (req, res) => {
 
     const total = await PostModel.find().countDocuments();
     const data = await PostModel.find()
+      .populate('author')
       .skip((pageNumber - 1) * pageSize)
       .limit(pageSize)
       .lean();
